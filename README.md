@@ -9,12 +9,8 @@
     ```
     docker-compose exec app php
     ````
-3. Запуск миграций
-    ```
-    php artisan migrate
-    ```
-4. Запуск миграций и сидов
+3. Запуск миграций и сидов
     ```
     php artisan migrate --seed
     ```
-5. Сайт будет доступен по URL: http://localhost:8000
+4. Сайт будет доступен по URL: http://localhost:8000
