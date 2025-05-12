@@ -1,0 +1,14 @@
+FROM node:20.11
+
+WORKDIR /var/www/html
+
+# Копируем только файлы, необходимые для установки зависимостей
+COPY package.json package-lock.json ./
+
+# Установка npm зависимостей (кешируется)
+RUN npm install --verbose
+
+# Копируем остальные файлы
+COPY . .
+
+CMD ["npm", "run", "dev"]

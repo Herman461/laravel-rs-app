@@ -1,16 +1,19 @@
 
 ## Инсталляция
-
-1. Установка контейнера
+1. Клонируем репозиторий
+   ```
+    git clone https://github.com/Herman461/laravel-rs-app
+    ```
+2. Установка контейнера
     ```
     docker-composer up -d --build
     ```
-2. Вход в контейнер
+3. Вход в контейнер
     ```
-    docker-compose exec app php
+    docker-compose exec app bash
     ````
-3. Запуск миграций и сидов
+4. Запуск миграций и сидов
     ```
     php artisan migrate --seed
     ```
-4. Сайт будет доступен по URL: http://localhost:8000
+5. Сайт будет доступен по URL: http://localhost:8000

@@ -2,12 +2,15 @@ version: '3.8'
 
 services:
     app:
-        image: php:8.2-apache
+        build:
+            context: .
+            dockerfile: Dockerfile.php
         ports:
             - "8000:80"
         volumes:
             - .:/var/www/html
             - ~/.composer:/tmp/composer
+            - ./apache-config.conf:/etc/apache2/sites-enabled/000-default.conf
         environment:
             - DB_HOST=mysql
             - DB_DATABASE=laravel-rocket-science
@@ -15,17 +18,6 @@ services:
             - DB_PASSWORD=root
         depends_on:
             - mysql
-        command: >
-            bash -c "
-            apt-get update -qq &&
-            apt-get install -y --no-install-recommends git zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev > /dev/null &&
-            docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath gd &&
-            curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer &&
-            composer install --optimize-autoloader --no-interaction &&
-            php artisan key:generate &&
-            chmod -R 777 storage bootstrap/cache &&
-            apache2-foreground
-            "
 
     mysql:
         image: mysql:8.0
@@ -34,20 +26,21 @@ services:
             - MYSQL_DATABASE=laravel-rocket-science
         volumes:
             - mysql_data:/var/lib/mysql
+        command: --default-authentication-plugin=mysql_native_password
 
-    node:
-        image: node:18
+    vite:
+        build:
+            context: .
+            dockerfile: Dockerfile.node
         volumes:
-            - .:/app
-            - ~/.npm:/tmp/npm
-        working_dir: /app
+            - .:/var/www/html
+            - vite_node_modules:/var/www/html/node_modules
         ports:
             - "5173:5173"
-        command: >
-            bash -c "
-            npm install &&
-            npm run dev
-            "
+        environment:
+            - NODE_ENV=development
+            - CHOKIDAR_USEPOLLING=true
 
 volumes:
     mysql_data:
+    vite_node_modules:
